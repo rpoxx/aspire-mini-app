@@ -1,0 +1,51 @@
+import { Db, ObjectId } from 'mongodb'
+import { LoanDocument } from '../documents/loan.document'
+import { LOAN_COLLECTION_NAME } from '../database.constants'
+import { Loan, LoanStatus } from '@business-utils/domain'
+
+/*
+ ** Defines the database queries for the loan collection.
+ */
+
+/**
+ * Find loan by Id in the database
+ * @param db : database connection
+ * @param id : id of the loan
+ * @returns : loan document or null
+ */
+export async function findLoanById(
+  db: Db,
+  id: string
+): Promise<LoanDocument | null> {
+  return await db
+    .collection(LOAN_COLLECTION_NAME)
+    .findOne<LoanDocument>({ _id: new ObjectId(id) })
+}
+
+/**
+ * Insert Loan in collection
+ * @param db  : database connection
+ * @param user : loan object
+ * @returns : id of the inserted loan
+ */
+export async function insertLoanInDB(db: Db, loan: Loan): Promise<string> {
+  const result = await db.collection(LOAN_COLLECTION_NAME).insertOne(loan)
+  return result.insertedId.toString()
+}
+
+/**
+ * Update Loan state in collection
+ * @param db  : database connection
+ * @param id : loan id
+ * @returns : number of loan updated
+ */
+export async function updateLoanState(
+  db: Db,
+  id: string,
+  newState: LoanStatus
+): Promise<number> {
+  const result = await db
+    .collection(LOAN_COLLECTION_NAME)
+    .updateOne({ _id: new ObjectId(id) }, { $set: { state: newState } })
+  return result.modifiedCount
+}
