@@ -1,10 +1,17 @@
 import { Db } from 'mongodb'
-import { getLoanById, insertLoan, updateLoanToApproved } from './loan.service'
+import {
+  getLoanById,
+  getLoansForCustomerId,
+  insertLoan,
+  updateLoanToApproved,
+} from './loan.service'
 import {
   ApproveLoanRequest,
   ApproveLoanResponse,
   GetLoanRequest,
   GetLoanResponse,
+  GetLoansForCustomerRequest,
+  GetLoansForCustomerResponse,
   RequestLoanDto,
   RequestLoanRequest,
   RequestLoanResponse,
@@ -34,6 +41,30 @@ export async function getLoan(
     }
     console.log(`Loan of id ${id} returned`)
     return res.status(200).send(loan)
+  } catch (error) {
+    console.error(error, error.stack)
+    return res.status(500).send(`Internal Server Error: ${error.message}`)
+  }
+}
+
+/**
+ * Get loans of customerId
+ * @param req : Request with customer id as parameter
+ * @param res : Response of the request
+ * @returns the loans object of the customer
+ */
+export async function getLoansOfCustomer(
+  req: GetLoansForCustomerRequest,
+  res: GetLoansForCustomerResponse
+): Promise<void> {
+  try {
+    const db: Db = req.app.locals.db
+
+    const customerId: string = req.params.customerId
+    const loans = await getLoansForCustomerId(db, customerId)
+
+    console.log(`Loans of customer ${customerId} returned`)
+    return res.status(200).send(loans)
   } catch (error) {
     console.error(error, error.stack)
     return res.status(500).send(`Internal Server Error: ${error.message}`)

@@ -12,6 +12,7 @@ import { repaymentFixtures } from './resources/repayment.fixture'
 
 /**
  * Fill the database so that we can have some interesting tests over the development
+ * In further operations, this can be recycle into integration tests
  */
 async function populateDatabase() {
   const client = new MongoClient(MONGO_DB_URL)

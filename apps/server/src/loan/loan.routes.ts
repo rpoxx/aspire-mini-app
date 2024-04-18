@@ -1,10 +1,22 @@
 import express from 'express'
-import { getLoan, requestLoan, approveLoan } from './loan.controller'
-import { body } from 'express-validator'
+import {
+  getLoan,
+  requestLoan,
+  approveLoan,
+  getLoansOfCustomer,
+} from './loan.controller'
+import { body, query } from 'express-validator'
 
 const router = express.Router()
 
 router.get('/:id', getLoan)
+router.get(
+  '/customer/:customerId',
+  query('customerId')
+    .isMongoId()
+    .withMessage('Customer Id must be a mongo string id'),
+  getLoansOfCustomer
+)
 router.post(
   '/request',
   [

@@ -1,5 +1,6 @@
 import {
   findLoanById,
+  findLoansForCustomerId,
   insertLoanInDB,
   updateLoanState,
 } from '../database/repositories/loan.repository'
@@ -11,7 +12,7 @@ import {
   RepaymentStatus,
 } from '../../../../packages/business-utils/domain/src/index'
 import { Db, ObjectId } from 'mongodb'
-import { LoanDto, RequestLoanDto } from './loan.type'
+import { LoanDto, LoanForCutsomerIdDto, RequestLoanDto } from './loan.type'
 import {
   initRepayment,
   updateRepaymentToPending,
@@ -36,6 +37,43 @@ export async function getLoanById(db: Db, id: string): Promise<LoanDto | null> {
     state: result.state,
     customerId: result.customerId.toString(),
   }
+}
+
+/**
+ * Find loans for a customerId
+ * @param db : database connection
+ * @param id : id of the customer
+ * @returns an array of loans with the repayments for the customer
+ */
+export async function getLoansForCustomerId(
+  db: Db,
+  customerId: string
+): Promise<LoanForCutsomerIdDto[]> {
+  const loans = await findLoansForCustomerId(db, customerId)
+  const loanWithRepayments = await Promise.all(
+    // Join all repayments associated to the loan
+    loans.map(async (loan) => {
+      const repaymentsDocuments = await findRepaymentsByLoanId(
+        db,
+        loan._id.toString()
+      )
+      const repayments = repaymentsDocuments.map((repayment) => {
+        return {
+          paymentDate: repayment.paymentDate,
+          amount: repayment.amount,
+          state: repayment.state,
+        }
+      })
+      return {
+        startDate: loan.startDate,
+        amount: loan.amount,
+        term: loan.term,
+        state: loan.state,
+        repayments,
+      }
+    })
+  )
+  return loanWithRepayments
 }
 
 /**

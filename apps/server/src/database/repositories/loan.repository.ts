@@ -23,6 +23,22 @@ export async function findLoanById(
 }
 
 /**
+ * Find loans for a specific customerId in the database
+ * @param db : database connection
+ * @param customerId : id of the customer
+ * @returns : loans document or null
+ */
+export async function findLoansForCustomerId(
+  db: Db,
+  customerId: string
+): Promise<LoanDocument[] | null> {
+  return await db
+    .collection(LOAN_COLLECTION_NAME)
+    .find<LoanDocument>({ customerId: new ObjectId(customerId) })
+    .toArray()
+}
+
+/**
  * Insert Loan in collection
  * @param db  : database connection
  * @param user : loan object
