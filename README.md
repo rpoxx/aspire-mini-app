@@ -37,3 +37,5 @@ This will remove everything on your docker except the volumes.
 ## API Doc and use
 
 https://www.postman.com/cryosat-astronaut-14351547/workspace/apire-mini-app/collection/31279199-48457e12-af79-4c03-8213-5d053e426487
+
+If you want to test, use the ids in the logs
