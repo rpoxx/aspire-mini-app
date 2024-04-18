@@ -1,7 +1,8 @@
 import { Db, ObjectId } from 'mongodb'
 import { UserDocument } from '../documents/user.document'
 import { USER_COLLECTION_NAME } from '../database.constants'
-import { User } from '@business-utils/domain'
+// ToDo: solve why @business-utils/domain is not working doesn't work
+import { User } from '../../../../../packages/business-utils/domain/src/index'
 
 /*
  ** Defines the database queries for the user collection.

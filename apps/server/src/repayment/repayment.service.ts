@@ -83,41 +83,8 @@ export async function updateRepaymentToPaid(
   // Mock the reception of the event by the service DataService
   console.log('Event repayment.paid received by Data Service')
 
-  if (await hasOneRepaymentNotPaid(db, loanId)) {
-    await updateLoanToPaid(db, loanId)
+  if ((await hasOneRepaymentNotPaid(db, loanId)) === true) {
+    return
   }
-}
-
-/**
- * Service which activate the repayment and set its state to pending
- * It will trigger an Event to the event platform.
- * @param db : database connection
- * @param id : id of the repayment to update to pending state
- * @param dateToPay : deadline to pay the repayment
- * @returns nothing
- */
-export async function updateRepaymentToPending(
-  db: Db,
-  id: string,
-  dateToPay: Date
-): Promise<void> {
-  const numberOfRepaymentPending = await updateRepaymentState(
-    db,
-    id,
-    RepaymentStatus.PENDING
-  )
-
-  if (numberOfRepaymentPending === 0) {
-    throw new Error(`Repayment of id ${id} could not be activated`)
-  }
-
-  // Mock the event we want to send to the event platform
-  console.log('Event repayment.activated sent to event platform')
-  // Mock the reception of the event by the service PaymentReminderService
-  console.log('Event repayment.activated received by Payment Reminder Service')
-  console.log(
-    `Scheduling notification to customer to pay the repayment ${id} at date ${dateToPay.toDateString()}`
-  )
-  // Mock the reception of the event by the service DataService
-  console.log('Event repayment.activated received by Data Service')
+  return await updateLoanToPaid(db, loanId)
 }

@@ -13,10 +13,7 @@ import {
 } from '../../../../packages/business-utils/domain/src/index'
 import { Db, ObjectId } from 'mongodb'
 import { LoanDto, LoanForCutsomerIdDto, RequestLoanDto } from './loan.type'
-import {
-  initRepayment,
-  updateRepaymentToPending,
-} from '../repayment/repayment.service'
+import { initRepayment } from '../repayment/repayment.service'
 import { findRepaymentsByLoanId } from '../database/repositories/repayment.repository'
 
 /**
@@ -104,7 +101,7 @@ export async function insertLoan(
       paymentDate: new Date(
         requestLoan.startDate.getTime() + i * 7 * 24 * 60 * 60 * 1000
       ),
-      amount: requestLoan.amount / requestLoan.term,
+      amount: Math.ceil((requestLoan.amount / requestLoan.term) * 100) / 100,
       state: RepaymentStatus.PENDING,
       loanId: new ObjectId(insertedLoanId),
     }
@@ -143,8 +140,6 @@ export async function updateLoanToApproved(db: Db, id: string): Promise<void> {
     throw new Error(`Loan of id ${id} could not be approved`)
   }
 
-  await activateRepayments(db, id)
-
   // Mock the event we want to send to the event platform
   console.log('Event loan.approved sent to event platform')
   // Mock the reception of the event by the service NotificationService
@@ -179,23 +174,4 @@ export async function updateLoanToPaid(db: Db, loanId: string): Promise<void> {
   console.log(`Sending notification to admin that loan ${loanId} has been paid`)
   // Mock the reception of the event by the service DataService
   console.log('Event loan.paid received by Data Service')
-}
-
-/**
- * Service which activate the repayments once the loan has been approved
- * @param db : database connection
- * @param loanId : id of the loan associated to the repayment
- * @returns nothing
- */
-async function activateRepayments(db: Db, loanId: string): Promise<void> {
-  // Get all repayments associated to the loan
-  const repayments = await findRepaymentsByLoanId(db, loanId)
-
-  repayments.forEach(async (repayment) => {
-    await updateRepaymentToPending(
-      db,
-      repayment._id.toString(),
-      repayment.paymentDate
-    )
-  })
 }
