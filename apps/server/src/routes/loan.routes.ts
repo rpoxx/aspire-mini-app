@@ -4,7 +4,7 @@ import {
   requestLoan,
   approveLoan,
   getLoansOfCustomer,
-} from './loan.controller'
+} from '../loan/loan.controller'
 import { body, query } from 'express-validator'
 
 const router = express.Router()
@@ -18,7 +18,7 @@ router.get(
   getLoansOfCustomer
 )
 router.post(
-  '/request',
+  '/',
   [
     body('startDate').isISO8601().withMessage('Start Date must be a date'),
     body('amount')

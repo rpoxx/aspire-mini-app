@@ -1,9 +1,9 @@
 import express, { Application } from 'express'
 import { LOCAL_PORT } from './config/app.config'
 import { createDbConnection } from './database/database.service'
-import userRoutes from './user/user.routes'
-import loanRoutes from './loan/loan.routes'
-import repaymentRoutes from './repayment/repayment.routes'
+import userRoutes from './routes/user.routes'
+import loanRoutes from './routes/loan.routes'
+import repaymentRoutes from './routes/repayment.routes'
 
 async function startApp() {
   const app: Application = express()

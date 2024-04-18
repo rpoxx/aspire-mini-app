@@ -51,6 +51,12 @@ export async function createUser(
   try {
     const db: Db = req.app.locals.db
 
+    // Body data validation
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() })
+    }
+
     const userToInsert: User = req.body
     const userId = await insertUser(db, userToInsert)
 

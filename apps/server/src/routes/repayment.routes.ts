@@ -1,5 +1,5 @@
 import express from 'express'
-import { getRepayment, payRepayment } from './repayment.controller'
+import { getRepayment, payRepayment } from '../repayment/repayment.controller'
 import { body } from 'express-validator'
 
 const router = express.Router()
