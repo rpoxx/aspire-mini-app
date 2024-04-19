@@ -16,14 +16,14 @@ import { updateLoanToPaid } from '../loan/loan.service'
 /**
  * Find repayment by Id
  * @param db : database connection
- * @param id : id of the repayment
+ * @param repaymentId : id of the repayment
  * @returns the Repayment or null if the Repayment is not found
  */
 export async function getRepaymentById(
   db: Db,
-  id: string
+  repaymentId: string
 ): Promise<RepaymentDto | null> {
-  const result = await findRepaymentById(db, id)
+  const result = await findRepaymentById(db, repaymentId)
   if (!result) {
     return null
   }
@@ -52,33 +52,33 @@ export async function initRepayment(
  * Service which pay a repayment. Once the repayment has been paid, it will
  * trigger an Event to the event platform.
  * @param db : database connection
- * @param payRepayment : repayment requested by the Customer
+ * @param repaymentId : id of the repayment to be paid
  * @param loanId : id of the loan associated to the repayment
  * @returns nothing
  */
 export async function updateRepaymentToPaid(
   db: Db,
-  id: string,
+  repaymentId: string,
   loanId: string
 ): Promise<void> {
   const numberOfRepaymentPaid = await updateRepaymentState(
     db,
-    id,
+    repaymentId,
     RepaymentStatus.PAID
   )
 
   if (numberOfRepaymentPaid === 0) {
-    throw new Error(`Repayment of id ${id} could not be paid`)
+    throw new Error(`Repayment of id ${repaymentId} could not be paid`)
   }
 
-  console.log(`Repayment of id ${id} paid`)
+  console.log(`Repayment of id ${repaymentId} paid`)
 
   // Mock the event we want to send to the event platform
   console.log('Event repayment.paid sent to event platform')
   // Mock the reception of the event by the service NotificationService
   console.log('Event repayment.paid received by Notification Service')
   console.log(
-    `Sending notification to customer that repayment ${id} has been paid`
+    `Sending notification to customer that repayment ${repaymentId} has been paid`
   )
   // Mock the reception of the event by the service DataService
   console.log('Event repayment.paid received by Data Service')

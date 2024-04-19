@@ -39,7 +39,7 @@ export async function getLoanById(db: Db, id: string): Promise<LoanDto | null> {
 /**
  * Find loans for a customerId
  * @param db : database connection
- * @param id : id of the customer
+ * @param customerId : id of the customer
  * @returns an array of loans with the repayments for the customer
  */
 export async function getLoansForCustomerId(
@@ -78,7 +78,7 @@ export async function getLoansForCustomerId(
  * Service which request a loan. Once the loan has been inserted, it will
  * trigger an Event to the event platform.
  * @param db : database connection
- * @param requestLoan : loan requested by the User
+ * @param requestLoan : loan requested by the Customer
  * @returns the id of the loan inserted
  */
 export async function insertLoan(
@@ -127,25 +127,33 @@ export async function insertLoan(
  * Service which approves a loan. Once the loan has been approved, it will
  * trigger an Event to the event platform.
  * @param db : database connection
- * @param requestLoan : loan requested by the User
+ * @param loanId : id of the loan to update to approved state
  * @returns nothing
  */
-export async function updateLoanToApproved(db: Db, id: string): Promise<void> {
+export async function updateLoanToApproved(
+  db: Db,
+  loanId: string
+): Promise<void> {
   const numberOfLoanApproved = await updateLoanState(
     db,
-    id,
+    loanId,
     LoanStatus.APPROVED
   )
 
   if (numberOfLoanApproved === 0) {
-    throw new Error(`Loan of id ${id} could not be approved`)
+    throw new Error(`Loan of id ${loanId} could not be approved`)
   }
 
   // Mock the event we want to send to the event platform
   console.log('Event loan.approved sent to event platform')
   // Mock the reception of the event by the service NotificationService
   console.log('Event loan.approved received by Notification Service')
-  console.log(`Sending notification to user that loan ${id} has been approved`)
+  console.log(
+    `Sending notification to customer that loan ${loanId} has been approved`
+  )
+  // Mock the reception of the event by the service SchedulePaymentService
+  console.log('Event loan.approved received by Schedule Payment Service')
+  console.log('Scheduling notification before deadline of payment to Customer')
   // Mock the reception of the event by the service DataService
   console.log('Event loan.approved received by Data Service')
 }
