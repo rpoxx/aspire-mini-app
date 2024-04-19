@@ -20,6 +20,7 @@ export async function getUserById(db: Db, id: string): Promise<UserDto | null> {
   return {
     name: result.name,
     email: result.email,
+    role: result.role,
   }
 }
 

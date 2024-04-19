@@ -3,6 +3,7 @@ import { Db } from 'mongodb'
 import { getUserById, insertUser } from './user.service'
 import { GetUserRequest, InsertUserRequest } from './user.type'
 import { User } from '@business-utils/domain'
+import { validationResult } from 'express-validator'
 
 /**
  * Defines the controllers for the user routes.

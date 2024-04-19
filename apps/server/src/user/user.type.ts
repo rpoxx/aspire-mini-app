@@ -1,4 +1,4 @@
-import { User } from '@business-utils/domain'
+import { User, UserRole } from '@business-utils/domain'
 import { Request } from 'express'
 
 export type GetUserRequest = Request & {
@@ -14,4 +14,5 @@ export type InsertUserRequest = Request & {
 export type UserDto = {
   name: string
   email: string
+  role: UserRole
 }
