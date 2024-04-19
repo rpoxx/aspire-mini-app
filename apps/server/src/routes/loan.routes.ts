@@ -6,6 +6,7 @@ import {
   getLoansOfCustomer,
 } from '../loan/loan.controller'
 import { body, query } from 'express-validator'
+import { checkAdminTokenInHeader } from '../authentication/auth.controller'
 
 const router = express.Router()
 
@@ -31,6 +32,6 @@ router.post(
   ],
   requestLoan
 )
-router.post('/:id/approve', approveLoan)
+router.post('/:id/approve', checkAdminTokenInHeader, approveLoan)
 
 export default router

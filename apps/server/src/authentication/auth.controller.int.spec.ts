@@ -1,7 +1,8 @@
 import { Db } from 'mongodb'
-import { getAdminToken } from './auth.service'
-import { authenticate } from './auth.controller'
+import { getAdminToken, validateAdminToken } from './auth.service'
+import { authenticate, checkAdminTokenInHeader } from './auth.controller'
 import { UserRole } from '../../../../packages/business-utils/domain/src'
+import { TOKEN_ADMIN } from '../secret/secret.service'
 
 let mockDb: jest.Mocked<Db>
 // Mocking the functions
@@ -10,6 +11,7 @@ jest.mock('../user/user.service', () => ({
 }))
 jest.mock('./auth.service', () => ({
   getAdminToken: jest.fn().mockResolvedValue('123456789'),
+  validateAdminToken: jest.fn().mockResolvedValue(true),
 }))
 
 beforeEach(() => {
@@ -75,8 +77,52 @@ describe('authController', () => {
       expect(res.status).toHaveBeenCalledWith(500)
     })
   })
+
+  describe('checkAdminTokenInHeader', () => {
+    const token = 'token'
+    it('should authenticate as admin', async () => {
+      const mockvalidateAdminToken =
+        require('./auth.service').validateAdminToken
+      mockvalidateAdminToken.mockImplementationOnce(() => true)
+
+      const { req, res, next } = createHeaderRequestResponse(token)
+
+      await checkAdminTokenInHeader(req as any, res as any, next)
+
+      expect(res.status).not.toHaveBeenCalledWith(401)
+      expect(res.status).not.toHaveBeenCalledWith(500)
+    })
+
+    it('should unauthorized the authentification if wrong token', async () => {
+      const mockvalidateAdminToken =
+        require('./auth.service').validateAdminToken
+      mockvalidateAdminToken.mockImplementationOnce(() => false)
+
+      const { req, res, next } = createHeaderRequestResponse(token)
+
+      await checkAdminTokenInHeader(req as any, res as any, next)
+
+      expect(res.status).toHaveBeenCalledWith(401)
+    })
+  })
 })
 
+function createHeaderRequestResponse(token: string) {
+  return {
+    req: {
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    },
+
+    res: {
+      status: jest.fn().mockReturnThis(),
+      send: jest.fn(),
+    },
+
+    next: jest.fn(),
+  }
+}
 function createRequestResponse(mockDb, userId) {
   return {
     req: {
