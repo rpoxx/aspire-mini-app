@@ -1,15 +1,12 @@
 import { Db } from 'mongodb'
-import { getAdminToken, validateAdminToken } from './auth.service'
-import { authenticate, checkAdminTokenInHeader } from './auth.controller'
+import { getAdminToken } from './user.service'
+import { authenticate, checkAdminTokenInHeader } from './user.controller'
 import { UserRole } from '../../../../packages/business-utils/domain/src'
-import { TOKEN_ADMIN } from '../secret/secret.service'
 
 let mockDb: jest.Mocked<Db>
 // Mocking the functions
-jest.mock('../user/user.service', () => ({
+jest.mock('./user.service', () => ({
   getUserById: jest.fn().mockResolvedValue({}),
-}))
-jest.mock('./auth.service', () => ({
   getAdminToken: jest.fn().mockResolvedValue('123456789'),
   validateAdminToken: jest.fn().mockResolvedValue(true),
 }))
@@ -21,11 +18,11 @@ beforeEach(() => {
   } as any
 })
 
-describe('authController', () => {
+describe('userController', () => {
   const userId = 'userId'
   describe('authenticate', () => {
     it('should authenticate as admin', async () => {
-      const mockGetUserById = require('../user/user.service').getUserById
+      const mockGetUserById = require('./user.service').getUserById
       mockGetUserById.mockImplementationOnce(() =>
         Promise.resolve({ role: UserRole.ADMIN })
       )
@@ -39,7 +36,7 @@ describe('authController', () => {
     })
 
     it('should authenticate as customer', async () => {
-      const mockGetUserById = require('../user/user.service').getUserById
+      const mockGetUserById = require('./user.service').getUserById
       mockGetUserById.mockImplementationOnce(() =>
         Promise.resolve({ role: UserRole.CUSTOMER })
       )
@@ -53,7 +50,7 @@ describe('authController', () => {
     })
 
     it('should return 403 if the user is not found', async () => {
-      const mockGetUserById = require('../user/user.service').getUserById
+      const mockGetUserById = require('./user.service').getUserById
       mockGetUserById.mockImplementationOnce(() => Promise.resolve(null))
 
       const { req, res } = createRequestResponse(mockDb, undefined)
@@ -65,7 +62,7 @@ describe('authController', () => {
     })
 
     it('should return 500 if an error occurs', async () => {
-      const mockgetLoanById = require('../user/user.service').getUserById
+      const mockgetLoanById = require('./user.service').getUserById
       mockgetLoanById.mockImplementationOnce(() =>
         Promise.reject({ error: { stack: 'error' } })
       )
@@ -82,7 +79,7 @@ describe('authController', () => {
     const token = 'token'
     it('should authenticate as admin', async () => {
       const mockvalidateAdminToken =
-        require('./auth.service').validateAdminToken
+        require('./user.service').validateAdminToken
       mockvalidateAdminToken.mockImplementationOnce(() => true)
 
       const { req, res, next } = createHeaderRequestResponse(token)
@@ -95,7 +92,7 @@ describe('authController', () => {
 
     it('should unauthorized the authentification if wrong token', async () => {
       const mockvalidateAdminToken =
-        require('./auth.service').validateAdminToken
+        require('./user.service').validateAdminToken
       mockvalidateAdminToken.mockImplementationOnce(() => false)
 
       const { req, res, next } = createHeaderRequestResponse(token)

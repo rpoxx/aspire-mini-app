@@ -4,7 +4,6 @@ import { createDbConnection } from './database/database.service'
 import userRoutes from './routes/user.routes'
 import loanRoutes from './routes/loan.routes'
 import repaymentRoutes from './routes/repayment.routes'
-import authRoutes from './routes/auth.routes'
 
 async function startApp() {
   const app: Application = express()
@@ -18,7 +17,6 @@ async function startApp() {
   await createDbConnection(app)
 
   // --- Routes Module ---
-  app.use('/api/auth', authRoutes)
   app.use('/api/user', userRoutes)
   app.use('/api/loan', loanRoutes)
   app.use('/api/repayment', repaymentRoutes)

@@ -6,7 +6,7 @@ import {
   getLoansOfCustomer,
 } from '../loan/loan.controller'
 import { body, query } from 'express-validator'
-import { checkAdminTokenInHeader } from '../authentication/auth.controller'
+import { checkAdminTokenInHeader } from '../user/user.controller'
 
 const router = express.Router()
 
