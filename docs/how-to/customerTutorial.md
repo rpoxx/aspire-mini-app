@@ -5,9 +5,9 @@ We will help you request and pay a loan as a customer without UI.
 - [API Postman](https://www.postman.com/cryosat-astronaut-14351547/workspace/apire-mini-app/collection/31279199-48457e12-af79-4c03-8213-5d053e426487)
 - As some initial data has been provided, you can also use the following resources and directly go step 3.:
 
-  - `userCustomerId`: 661f140fc3fdd12fa39c2faa
-  - `loanApprovedId`: 661f140fc3fdd14fa39c2fa9
-  - `loanPaidId`: 661f150fc3fdd14fa39c2fa9
+  - userCustomerId: `661f140fc3fdd12fa39c2faa`
+  - loanApprovedId: `661f140fc3fdd14fa39c2fa9`
+  - loanPaidId: `661f150fc3fdd14fa39c2fa9`
 
 **Important**: Go to the API Postman and select an environment (probably Docker Local if you run the demo)
 

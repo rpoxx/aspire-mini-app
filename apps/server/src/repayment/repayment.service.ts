@@ -80,6 +80,9 @@ export async function updateRepaymentToPaid(
   console.log(
     `Sending notification to customer that repayment ${repaymentId} has been paid`
   )
+  // Mock the reception of the event by the service SchedulePaymentService
+  console.log('Event repayment.paid received by Schedule Payment Service')
+  console.log('Canceling the payments reminders of this repayment')
   // Mock the reception of the event by the service DataService
   console.log('Event repayment.paid received by Data Service')
 
