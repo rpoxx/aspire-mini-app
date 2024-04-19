@@ -1,0 +1,44 @@
+{
+  "name": "aspire-mini-app",
+  "version": "1.0.0",
+  "description": "Test Case Mini-App for Aspire",
+  "scripts": {
+    "build:all": "npm run build:packages && npm run build:populate-db && npm run build:server",
+    "demo:start": "docker-compose -f ./docker-compose.demo.yaml up -d",
+    "demo:stop": "docker-compose -f ./docker-compose.demo.yaml down --rmi all",
+    "local:start": "npm run db:start && npm run build:server && npm run start:server",
+    "local:stop": "npm run db:stop",
+    "db:start": "npm run build:packages && docker-compose -f ./docker-compose.db.yaml up -d && npm run build:populate-db && npm run start:populate-db",
+    "db:stop": "docker-compose -f ./docker-compose.db.yaml down",
+    "start:populate-db": "cd ./apps/populate-db && npm run start",
+    "build:populate-db": "cd ./apps/populate-db && npm run build",
+    "start:server": "cd ./apps/server && npm run start",
+    "build:server": "cd ./apps/server && npm run build",
+    "build:packages": "npm run build:domain",
+    "build:domain": "cd ./packages/business-utils/domain && npm run build",
+    "test": "npx jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "@types/node": "^20.12.7",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.2",
+    "ts-node": "^10.9.2",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "express-validator": "^7.0.1",
+    "mongodb": "^6.5.0"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  }
+}
