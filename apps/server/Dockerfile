@@ -7,8 +7,11 @@ RUN npm install
 
 COPY . .
 
+RUN npm run build:packages
+RUN npm run build:populate-db
+# Run server build
 RUN npm run build:server
 
 EXPOSE 3005
 
-CMD ["npm", "run", "start:server"]
+CMD ["sh", "-c", "npm run start:populate-db && npm run start:server"]

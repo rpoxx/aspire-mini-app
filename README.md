@@ -1,46 +1,46 @@
-Welcome to the ASPIRE test-case
+Welcome to the ASPIRE test-case.
+Check the [docs](./docs/) repo for more documentation
 
 ## Available apps of the repo
 
-- **client**: Application available to the User
 - **populate-db**: Independantly fill the database with some data to help during development
 - **server**: API of the domain, which interacts with the DB
 
 ## Requirements
 
-- `npm install` to install dependancies
-- Install Docker on your laptop
+- [TestCaseDemo && Develop] Install Docker on your laptop
+- [Develop] Install node.js and npm
+- [Develop] `npm install` to install dependancies
 
-## Run the apps
+## [TestCaseDemo] Run the demo
 
-If you want to run one of the applications defined above, you'll need to run at the root of the repo:
+1. Open Docker
+2. At the root `./aspire-mini-app`, run to create the services:
+   - If you have npm: `npm demo:start`
+   - If you don't have npm: `docker-compose -f ./docker-compose.demo.yaml up -d`
+
+This will generate:
+
+- a mongo database on PORT 27027 with some initial data
+- a server on PORT 3005
+
+**Stop the demo**: at the root `/aspire-mini-app`, run `npm demo:stop` or `docker-compose -f ./docker-compose.demo.yaml down --rmi all` if you don't have npm.
+This will remove everything on your docker except the volumes.
+
+## [Develop] Run locally the apps
+
+### Local development
+
+Start the server with some data in the database: run `npm run local:start`
+
+To stop the application and the database: run `npm run local:stop`.
+
+Don't forget to remove the volumes generated.
+
+### Run apps individually
+
+If you want to run manually one of the applications defined above, you'll need to run at the root of the repo:
 
 1. `npm run build:packages` to first build the packages
 2. `npm run build:<appName>` to build the application you want to run
 3. `npm run start:<appName>` to start the application
-
-## Run the demo
-
-1. Open Docker
-2. At the root `/aspire-mini-app`, run `npm demo:start` to create the services
-
-This will generate:
-
-- a mongo database on PORT 27027 with some data
-- a server on PORT 3005
-
-**Stop the demo**: at the root `/aspire-mini-app`, run `npm demo:stop` to stop the services.
-This will remove everything on your docker except the volumes.
-
----
-
-## API Doc and use
-
-https://www.postman.com/cryosat-astronaut-14351547/workspace/apire-mini-app/collection/31279199-48457e12-af79-4c03-8213-5d053e426487
-
-If you want to test, use the ids in the logs
-I provided 3 other endpoints (very permissive) to help you test the project:
-
-- loan/:id
-- repayment/:id
-- user/:id

@@ -15,12 +15,15 @@ import { repaymentFixtures } from './resources/repayment.fixture'
  * In further operations, this can be recycle into integration tests
  */
 async function populateDatabase() {
-  const client = new MongoClient(MONGO_DB_URL)
+  const mongoDbUrl = process.env.MONGO_DB_URL ?? MONGO_DB_URL
+  const databaseName = process.env.DB_NAME ?? DATABASE_NAME
+
+  const client = new MongoClient(mongoDbUrl)
 
   try {
     await client.connect()
 
-    const database = client.db(DATABASE_NAME)
+    const database = client.db(databaseName)
     const userCollection = database.collection(USER_COLLECTION_NAME)
     const loanCollection = database.collection(LOAN_COLLECTION_NAME)
     const repaymentCollection = database.collection(REPAYMENT_COLLECTION_NAME)
