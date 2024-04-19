@@ -56,6 +56,7 @@ export async function getLoansForCustomerId(
       )
       const repayments = repaymentsDocuments.map((repayment) => {
         return {
+          _id: repayment._id,
           paymentDate: repayment.paymentDate,
           amount: repayment.amount,
           state: repayment.state,

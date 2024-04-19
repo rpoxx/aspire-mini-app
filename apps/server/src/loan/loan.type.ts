@@ -1,5 +1,6 @@
-import { LoanStatus, Repayment } from '@business-utils/domain'
+import { LoanStatus } from '@business-utils/domain'
 import { Request, Response } from 'express'
+import { RepaymentDocument } from '../database/documents/repayment.document'
 
 // ----- Requests
 export type GetLoanRequest = Request & {
@@ -39,7 +40,7 @@ export type LoanForCutsomerIdDto = {
   amount: number
   term: number
   state: LoanStatus
-  repayments: Omit<Repayment, 'loanId'>[]
+  repayments: Omit<RepaymentDocument, 'loanId'>[]
 }
 
 export type RequestLoanDto = {
